@@ -23,14 +23,14 @@ isDigit :: Int -> Bool
 isDigit n = 1 <= n && n <= 9
 
 emptyGrid :: Grid Cell
-emptyGrid = replicate (gridSize * gridSize) Nothing-- TODO: part 1
+emptyGrid = replicate (gridSize * gridSize) Nothing
 
 -- For the Brute-force Solver
 rows :: Grid a -> [[a]]
-rows = bundle gridSize-- TODO: part 1
+rows = bundle gridSize
 
 cols :: Grid a -> [[a]]
-cols = transpose . bundle gridSize-- TODO: part 1
+cols = transpose . bundle gridSize
 
 boxes :: Grid a -> [[a]]
 boxes grid = 
@@ -47,8 +47,7 @@ boxes grid =
         
 
     
--- TODO: part 1
--- For the Pencilmarking Solver
+
 {-|
 Given a row and column, finds the (unique) list of all indices that
 the cell at that position can see (i.e. all the cells that share the same
@@ -64,8 +63,6 @@ sees r c = rowcol ++ uqboxnos
     self = toIndex r c
     rowcol = [x| x <- rownos ++ colnos, x /= self]
     uqboxnos = [x| x <- boxnos, x `notElem` rowcol && x /= self]
-
- -- TODO: part 1
 
 {-|
 Returns a list of all coordinates of the grid, in left-to-right,
