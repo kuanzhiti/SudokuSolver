@@ -1,7 +1,7 @@
 module PencilSolver where
 
-import Data.List
-import Data.Maybe
+import Data.List (minimumBy)
+import Data.Maybe (mapMaybe, catMaybes)
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.Sudoku
@@ -21,6 +21,23 @@ fullGrid :: Tri Candidate
 fullGrid =
   fromList $
     map (\(r, c) -> Pencil r c (Set.fromList digits)) allRowsAndCols
+
+-- | Check whether an initial board configuration violates basic Sudoku rules
+validGroup :: [Cell] -> Bool
+validGroup cells = unique (catMaybes cells)
+
+isValidGrid :: Grid Cell -> Bool
+isValidGrid g = 
+  all validGroup (rows g) && 
+  all validGroup (cols g) && 
+  all validGroup (boxes g)
+
+-- | Check whether any cell has run out of candidate digits
+hasDeadEnds :: Tri Candidate -> Bool
+hasDeadEnds grid = any isEmptyCandidate [ grid ! i | i <- [0..80] ]
+  where
+    isEmptyCandidate (Pencil _ _ s) = Set.null s
+    isEmptyCandidate _              = False
 
 pencilmark :: Grid Cell -> (Tri Candidate, Worklist)
 pencilmark cellGrid = (finalGrid, emptyIndices)
@@ -52,33 +69,40 @@ place r c d tri = (finalTree, affectedIndices)
 placeAll :: Tri Candidate -> [(Row, Col, Digit)] -> Tri Candidate
 placeAll tri rcds = foldl (\g (r, c, d) -> fst (place r c d g)) tri rcds
 
--- Propagates constraints, then falls back to backtracking search if necessary
+-- | Main entry point: validates input board first before running propagation
 solve :: Grid Cell -> Maybe (Grid Digit)
-solve cellGrid = 
-  let (initialGrid, initialWorklist) = pencilmark cellGrid
-  in propagateAndSolve initialGrid initialWorklist
+solve cellGrid
+  | not (isValidGrid cellGrid) = Nothing
+  | otherwise = 
+      let (initialGrid, initialWorklist) = pencilmark cellGrid
+      in if hasDeadEnds initialGrid
+           then Nothing
+           else propagateAndSolve initialGrid initialWorklist
 
 propagateAndSolve :: Tri Candidate -> Worklist -> Maybe (Grid Digit)
-propagateAndSolve grid [] = solveWithBacktracking grid
-propagateAndSolve grid (idx : rest) =
-  case grid ! idx of
-    Placed _ -> propagateAndSolve grid rest
-    Pencil r c candidates ->
-      case Set.toList candidates of
-        []  -> Nothing -- Invalid state (Dead end)
-        [singleDigit] ->
-          let (grid', newWork) = place r c singleDigit grid
-          in propagateAndSolve grid' (newWork ++ rest)
-        _   -> propagateAndSolve grid rest
+propagateAndSolve grid worklist
+  | hasDeadEnds grid = Nothing
+  | otherwise = case worklist of
+      [] -> solveWithBacktracking grid
+      (idx : rest) ->
+        case grid ! idx of
+          Placed _ -> propagateAndSolve grid rest
+          Pencil r c candidates ->
+            case Set.toList candidates of
+              []  -> Nothing
+              [singleDigit] ->
+                let (grid', newWork) = place r c singleDigit grid
+                in propagateAndSolve grid' (newWork ++ rest)
+              _   -> propagateAndSolve grid rest
 
 solveWithBacktracking :: Tri Candidate -> Maybe (Grid Digit)
 solveWithBacktracking grid
+  | hasDeadEnds grid = Nothing
   | all isPlaced candidatesList = Just [ d | Placed d <- candidatesList ]
   | otherwise =
-      -- MRV Heuristic: Find pencil cell with the fewest remaining candidates
       case findMinCandidates grid of
         Nothing -> Nothing
-        Just (idx, Pencil r c candidates) ->
+        Just (_, Pencil r c candidates) ->
           let tryDigit d =
                 let (grid', newWork) = place r c d grid
                 in propagateAndSolve grid' newWork

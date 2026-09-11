@@ -26,13 +26,12 @@ boldGrid = "\ESC[1m"
 -- Render top-level UI
 renderUI :: UIState -> IO ()
 renderUI st = do
-  putStr hideCursor
   putStr clearScreen
   putStrLn (boldGrid ++ "=== HASKELL TERMINAL SUDOKU ===" ++ resetStyle)
   putStrLn ""
   putStr (formatBoard (grid st) (cursor st))
   putStrLn ""
-  putStrLn ("Status: " ++ status st ++ resetStyle)
+  putStrLn ("Status: " ++ status st)
   hFlush stdout
 
 -- Render grid lines and highlight active cursor
