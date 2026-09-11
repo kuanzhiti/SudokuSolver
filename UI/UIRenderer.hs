@@ -50,7 +50,7 @@ formatBoard g (curR, curC) = unlines (concatMap renderRow [0..8])
           
           rowOut = box1 ++ "|" ++ box2 ++ "|" ++ box3
       in if r > 0 && r `mod` 3 == 0
-           then ["------+-------+------", rowOut]
+           then ["---------+---------+---------", rowOut]
            else [rowOut]
 
     formatCell r c cellVal =
