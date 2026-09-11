@@ -1,4 +1,4 @@
-module UIState where
+module UI.UIState where
 
 import Data.Sudoku (Cell, Digit, Grid, emptyGrid)
 import PencilSolver (solve) -- Member 1's Pure Solver

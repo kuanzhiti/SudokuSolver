@@ -35,7 +35,7 @@ update _ x (Leaf _) = Leaf x
 update i x (Split p t1 t2 t3)
   | i < n     = Split p (update i x t1) t2 t3
   | i < 2*n   = Split p t1 (update (i - n) x t2) t3
-  | otherwise = Split p t1 (update (i - 2 * n) x t3)
+  | otherwise = Split p t1 t2 (update (i - 2 * n) x t3)
   where n = p `div` 3
 
 -- For your debugging purposes

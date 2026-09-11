@@ -1,8 +1,8 @@
-module UIRenderer where
+module UI.UIRenderer where
 
 import System.IO
 import Data.Sudoku (Cell, Digit, Grid)
-import UIState (UIState(..))
+import UI.UIState (UIState(..))
 
 -- ANSI Escape Helper Codes
 clearScreen :: String
