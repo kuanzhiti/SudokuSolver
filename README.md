@@ -1,6 +1,11 @@
-*** SUDOKU SOLVER ***
+# Sudoku Solver
 
-- Project Structure
+## Project Structure
+
+<details>
+<summary>View project structure</summary>
+
+```text
 .
 ├── Data/
 │   ├── Sudoku.hs        # Board math, house lookup (rows, cols, boxes), and indices
@@ -11,17 +16,30 @@
 ├── UIRenderer.hs        # ANSI rendering logic for board layout and cell highlights
 ├── UIState.hs           # State transitions and solver invocation
 └── Main.hs              # Application entry point
+```
 
-- Controls
-**Key**                       **Action**
-↑ ↓ ← →                   Navigate cursor around the 9×9 grid
-1 – 9                     Place digit into the selected cell
-Space / 0 / Backspace     Clear the selected cell
-Enter                     Run constraint-propagation solver
-Q / Esc                   Quit the application
+</details>
 
-- Getting Started 
-1. Compile with GHC
-- ghc --make Main.hs -o sudoku
-2. Run the program
-- ./sudoku
+## Controls
+
+| Key | Action |
+|---|---|
+| `↑` `↓` `←` `→` | Navigate cursor around the 9×9 grid |
+| `1` – `9` | Place a digit into the selected cell |
+| `Space` / `0` / `Backspace` | Clear the selected cell |
+| `Enter` | Run the constraint-propagation solver |
+| `Q` / `Esc` | Quit the application |
+
+## Getting Started
+
+### 1. Compile with GHC
+
+```bash
+ghc --make Main.hs -o sudoku
+```
+
+### 2. Run the program
+
+```bash
+./sudoku
+```
