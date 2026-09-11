@@ -38,7 +38,7 @@
 ```bash
 ./build.sh
 ```
--For Windows user, run
+- For Windows user, run
 ```bash
 ./build.bat
 ```
