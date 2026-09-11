@@ -32,14 +32,31 @@
 
 ## Getting Started
 
-### 1. Compile with GHC
+### 1. Run the program
 
+- For Linux & Mac user, run
 ```bash
-ghc --make Main.hs -o sudoku
+./build.sh
+```
+-For Windows user, run
+```bash
+./build.bat
 ```
 
-### 2. Run the program
-
+- If permission is denied, run
 ```bash
-./sudoku
+chmod +x build.sh
 ```
+or
+```bash
+chmod +x build.bat
+```
+then run again
+```bash
+./build.sh
+```
+or
+```bash
+./build.bat
+```
+

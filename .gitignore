@@ -1,2 +1,6 @@
 *.o
 *.hi
+/sudoku
+/sudoku.exe
+dist-newstyle/
+.stack-work/
